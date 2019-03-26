@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+       default-lazy-init="true">
+
+    <!-- 启用shrio授权注解拦截方式 -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <!-- 装配 securityManager -->
+        <property name="securityManager" ref="securityManager" />
+        <!-- 配置登陆页面 -->
+        <property name="loginUrl" value="/login" />
+        <!-- 权限认证成功跳转的界面 -->
+        <property name="successUrl" value="/" />
+        <!-- 没有认证权限的界面 -->
+        <property name="unauthorizedUrl" value="/unauthorized" />
+        <!-- 具体配置需要拦截哪些 URL, 以及访问对应的 URL 时使用 Shiro 的什么 Filter 进行拦截. -->
+        <!-- anon-匿名访问，authc-需要认证 -->
+        <property name="filters">
+            <map>
+                <!--退出过滤器-->
+
+                <entry key="logout" value-ref="systemLogoutFilter"/>
+            </map>
+        </property>
+        <property name="filterChainDefinitions">
+            <value>
+                /index = anon
+                /login = anon
+                /admin = roles[admin]
+                /iflogin = authc
+                /logout = logout
+                /insert = roles[admin]
+                /delete = roles[admin]
+                /update = roles[admin]
+                /select = authc
+            </value>
+        </property>
+    </bean>
+    <!--注入自定义登出过滤器-->
+    <bean id="systemLogoutFilter" class="com.lx.service.shiro.SystemLogoutFilter">
+        <property name="redirectUrl" value="/login"/>
+    </bean>
+    <!-- 配置缓存管理器 -->
+    <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <!--指定 ehcache 的配置文件-->
+        <property name="cacheManagerConfigFile" value="classpath:ehcache-shiro.xml" />
+    </bean>
+
+    <!-- 凭证匹配器 -->
+    <bean id="credentialsMatcher" class="com.lx.shiro.RetryLimitHashedCredentialsMatcher">
+        <constructor-arg ref="cacheManager" />
+        <property name="hashAlgorithmName" value="md5" />
+        <property name="hashIterations" value="2" />
+        <property name="storedCredentialsHexEncoded" value="true" />
+    </bean>
+
+    <!-- 配置进行授权和认证的 Realm -->
+    <bean id="myRealm" class="com.lx.shiro.UserRealm">
+        <property name="credentialsMatcher" ref="credentialsMatcher"/>
+    </bean>
+    <!-- 配置 Shiro 的 SecurityManager Bean. -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="myRealm" />
+
+    </bean>
+    <!-- 配置 Bean 后置处理器: 会自动的调用和 Spring 整合后各个组件的生命周期方法. -->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+
+</beans>

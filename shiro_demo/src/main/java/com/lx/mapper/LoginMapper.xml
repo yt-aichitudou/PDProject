@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lx.mapper.LoginMapper" >
+    <select id="loginCheck" parameterType="String" resultType="com.lx.entity.User">
+        select  id,username,password,salt,locked from user where username = #{username} and password = #{password}
+    </select>
+    <insert id="registerUser" parameterType="user">
+        insert into user(username,password,salt) values (#{username},#{password},#{salt})
+    </insert>
+    <select id="findRoles" parameterType="String" resultType="role">
+        SELECT role.rid,role.role from user,role,u_r where username = #{username} AND USER.id = u_r.uid AND role.rid = u_r.rid
+    </select>
+    <select id="findPermission" parameterType="String" resultType="permission">
+        SELECT p.pid,p.permission from user,role,u_r,r_p,permission p where username = #{username} AND USER.id = u_r.uid AND role.rid = u_r.rid and role.rid = r_p.rid and p.pid = r_p.pid
+    </select>
+    <select id="findByUsername" parameterType="String" resultType="user">
+        select id,username,password,salt,locked from user where username = #{username}
+    </select>
+</mapper>

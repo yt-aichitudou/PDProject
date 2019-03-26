@@ -1,0 +1,14 @@
+com\lx\web\AlipayH5Controller.class
+com\lx\alipay\config\AlipayConfig.class
+com\lx\shiro\PasswordHelper.class
+com\lx\entity\User.class
+com\lx\mapper\LoginMapper.class
+com\lx\service\impl\LoginServiceImpl.class
+com\lx\service\LoginService.class
+com\lx\service\shiro\SystemLogoutFilter.class
+com\lx\entity\Permission.class
+com\lx\web\LoginController.class
+com\lx\entity\Role.class
+com\lx\shiro\RetryLimitHashedCredentialsMatcher.class
+com\lx\shiro\UserRealm.class
+com\lx\web\AlipayAppController.class
