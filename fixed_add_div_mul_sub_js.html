@@ -1,0 +1,88 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <meta charset="UTF-8"/>
+        <title>精确加减乘除</title>
+    </head>
+    <body>
+        <input type="text" id="n1"/>
+        <input type="text" id="n2"/><br/>
+        <input type="button" value="加" id="add"/><span id="addR"></span>
+        <input type="button" value="精确加" id="addPlus"/><span id="addPR"></span><br/>
+        <input type="button" value="减" id="sub"/><span id="subR"></span>
+        <input type="button" value="精确减" id="subPlus"/><span id="subPR"></span><br/>
+        <input type="button" value="乘" id="mul"/><span id="mulR"></span>
+        <input type="button" value="精确乘" id="mulPlus"/><span id="mulPR"></span><br/>
+        <input type="button" value="除" id="div"/><span id="divR"></span>
+        <input type="button" value="精确除" id="divPlus"/><span id="divPR"></span><br/>
+    </body>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script>
+            var value1;
+            var value2;
+            $("#add").click(function () {
+                value1=$("#n1").val();
+                value2=$("#n2").val();
+                $("#addR").html(Number(value2)+Number(value1));
+            });
+            $("#addPlus").click(function () {
+                $("#addPR").html(addM(value1,value2));
+            });
+            $("#sub").click(function () {
+                $("#subR").html(value1 - value2);
+            });
+            $("#subPlus").click(function () {
+                $("#subPR").html(subM(value1,value2));
+            });
+            $("#mul").click(function () {
+                $("#mulR").html(value1 * value2);
+            });
+            $("#mulPlus").click(function () {
+                $("#mulPR").html(mulM(value1,value2));
+            });
+            $("#div").click(function () {
+                $("#divR").html(value1 / value2);
+            });
+            $("#divPlus").click(function () {
+                $("#divPR").html(divM(value1,value2));
+            });
+
+
+            //加
+            var addM = function (num1,num2) {
+                var a1,a2,m;
+                try{a1=num1.toString().split(".")[1].length}catch (e) {a1=0}
+                try{a2=num2.toString().split(".")[1].length}catch (e) {a2=0}
+                m = Math.pow(10,Math.max(a1,a2));
+                return (num1*m + num2*m)/m;
+            };
+            //减
+            var subM = function (num1,num2) {
+                var a1,a2,m,n
+                try{a1=num1.toString().split(".")[1].length}catch (e) {a1=0}
+                try{a2=num2.toString().split(".")[1].length}catch (e) {a2=0}
+                m = Math.pow(10,Math.max(a1,a2));
+                n = Math.max(a1, a2);
+                return ((num1*m - num2*m)/m).toFixed(n);
+            };
+            //乘
+            var mulM = function (num1,num2) {
+                var a1,a2,m;
+                try{a1=num1.toString().split(".")[1].length}catch (e) {a1=0}
+                try{a2=num2.toString().split(".")[1].length}catch (e) {a2=0}
+                m = Math.pow(10,Number(a1) + Number(a2));
+                return (num1.toString().replace(".","") ) *(num2.toString().replace(".",""))/m;
+            };
+            //除
+            var divM = function (num1,num2) {
+                var a1,a2,m;
+                try{a1=num1.toString().split(".")[1].length}catch (e) {a1=0}
+                try{a2=num2.toString().split(".")[1].length}catch (e) {a2=0}
+                m = Math.pow(10,a2-a1);
+                return (num1.toString().replace(".","") ) /(num2.toString().replace(".",""))*m;
+            }
+
+
+    </script>
+</html>
